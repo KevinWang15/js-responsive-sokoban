@@ -4,7 +4,6 @@ body, html {
     font-family: Arial, Helvetica, sans-serif, "Microsoft YaHei"
 }
 
-
 body {
     position: absolute;
     top: 0;
@@ -31,6 +30,7 @@ body {
     background-image: url(../imgs/wall.png);
     width: 50px;
     height: 50px;
+    background-size: contain;
     box-sizing: border-box;
 }
 
@@ -41,6 +41,7 @@ body {
     background: #fbd500;
     width: 50px;
     height: 50px;
+    background-size: contain;
     background-image: url(../imgs/box.png);
 }
 
@@ -97,14 +98,12 @@ body {
 .zoomSettings .zoomIn, .zoomSettings .zoomOut {
     width: 58px;
     height: 58px;
-    margin-top: 1px;
-    margin-left: 1px;
+    margin: 1px;
     border-radius: 5px;
     position: absolute;
     box-sizing: border-box;
     font-size: 36px;
-    padding-top: 9px;
-    background: rgba(170, 170, 170, 0.12);
+    background: rgba(170, 170, 170, 0.2);
     text-align: center;
     cursor: pointer;
     opacity: 0.6;
@@ -112,6 +111,8 @@ body {
 
 .zoomSettings span {
     -webkit-user-select: none;
+    height: 58px;
+    line-height: 58px;
 }
 
 .zoomSettings .zoomIn {
@@ -147,11 +148,11 @@ body {
     position: absolute;
     box-sizing: border-box;
     font-size: 40px;
-    padding: 10px;
-    background: rgba(170, 170, 170, 0.12);
+    background: rgba(170, 170, 170, 0.2);
     text-align: center;
     cursor: pointer;
     opacity: 0.6;
+    line-height: 78px;
 }
 
 .joystick span {
@@ -165,7 +166,6 @@ body {
 
 .joystick .undo {
     top: 0;
-    padding-top: 26px;
     font-size: 22px;
     left: 0;
 }
@@ -173,7 +173,6 @@ body {
 .joystick .restart {
     top: 0;
     font-size: 18px;
-    padding-top: 16px;
     left: 160px;
 }
 
@@ -184,12 +183,10 @@ body {
 
 .joystick .left {
     top: 80px;
-    padding-top: 10px;
     left: 0;
 }
 
 .joystick .right {
     top: 80px;
-    padding-top: 10px;
     left: 160px;
 }

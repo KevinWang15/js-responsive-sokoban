@@ -106,7 +106,7 @@ var moveHistory = [];
 
 function setBoxOpacity(box) {
     if (GameState.map[box.y][box.x] == 2) {
-        box.element.style.opacity = 0.7;
+        box.element.style.opacity = 0.55;
     } else {
         box.element.style.opacity = 1;
     }
