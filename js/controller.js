@@ -321,7 +321,6 @@ function bindJoystick() {
     });
 }
 
-var dragging = false;
 var lastDragPos;
 var containerOffset;
 var containerZoom;
@@ -357,6 +356,7 @@ function setContainerPos() {
 }
 
 var documentWidth, documentHeight;
+
 function centerContainer() {
     containerOffset = {
         x: (documentWidth / containerZoom - (50 * GameState.map[0].length)) / 2,
@@ -367,31 +367,43 @@ function centerContainer() {
 }
 
 function enableDragContainer() {
+    var dragThreshold = 100;
+    var accumulativeDistance = {x: 0, y: 0};
+
     document.addEventListener('touchstart', function (e) {
+        accumulativeDistance = {x: 0, y: 0};
         e = e || window.event;
         e.preventDefault();
         lastDragPos = getCoords(e);
-        dragging = true;
     });
 
     document.addEventListener('touchmove', function (e) {
         e = e || window.event;
         e.preventDefault();
+
         if (!lastDragPos) {
             lastDragPos = getCoords(e);
-        } else {
-            var currentDragPos = getCoords(e);
-            var offset = {x: currentDragPos.x - lastDragPos.x, y: currentDragPos.y - lastDragPos.y};
-            containerOffset.x += (offset.x / containerZoom);
-            containerOffset.y += (offset.y / containerZoom);
-            setContainerPos();
-            lastDragPos = currentDragPos;
         }
+
+        var currentDragPos = getCoords(e);
+        var offset = {x: currentDragPos.x - lastDragPos.x, y: currentDragPos.y - lastDragPos.y};
+
+        accumulativeDistance.x += (offset.x / containerZoom);
+        accumulativeDistance.y += (offset.y / containerZoom);
+
+        if (Math.abs(accumulativeDistance.x) < dragThreshold && Math.abs(accumulativeDistance.y) < dragThreshold)
+            return;
+
+        containerOffset.x += (offset.x / containerZoom);
+        containerOffset.y += (offset.y / containerZoom);
+
+        setContainerPos();
+        lastDragPos = currentDragPos;
+
     });
 
     document.addEventListener('touchend', function (e) {
         e = e || window.event;
         e.preventDefault();
-        dragging = false;
     });
 }
