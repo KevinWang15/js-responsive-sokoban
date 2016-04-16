@@ -193,20 +193,27 @@ function checkSuccess() {
 
 function bindKeys() {
     document.onkeydown = function (e) {
-        switch (e.code) {
+        e = e || window.event;
+        console.log(e);
+        switch (e.code || e.key) {
             case "ArrowUp":
+            case "Up":
                 move(0, -1);
                 break;
             case "ArrowDown":
+            case "Down":
                 move(0, 1);
                 break;
             case "ArrowLeft":
+            case "Left":
                 move(-1, 0);
                 break;
             case "ArrowRight":
+            case "Right":
                 move(1, 0);
                 break;
             case "Escape":
+            case "Esc":
                 restart();
                 break;
             case "Backspace":
@@ -214,9 +221,11 @@ function bindKeys() {
                 e.preventDefault();
                 break;
             case "Minus":
+            case "-":
                 zoomOut();
                 break;
             case "Equal":
+            case "=":
                 zoomIn();
                 e.preventDefault();
                 break;
