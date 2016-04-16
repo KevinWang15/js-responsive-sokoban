@@ -87,7 +87,7 @@ function clearContainer() {
     var children = DOM.container.children;
     var toRemove = [];
     for (var childKey in children) {
-        if (!children.hasOwnProperty(childKey))
+        if (!children.hasOwnProperty(childKey) || typeof children[childKey] != "object")
             continue;
         toRemove.push(children[childKey]);
     }
@@ -194,7 +194,6 @@ function checkSuccess() {
 function bindKeys() {
     document.onkeydown = function (e) {
         e = e || window.event;
-        console.log(e);
         switch (e.code || e.key) {
             case "ArrowUp":
             case "Up":
@@ -369,11 +368,15 @@ function centerContainer() {
 
 function enableDragContainer() {
     document.addEventListener('touchstart', function (e) {
+        e = e || window.event;
+        e.preventDefault();
         lastDragPos = getCoords(e);
         dragging = true;
     });
 
     document.addEventListener('touchmove', function (e) {
+        e = e || window.event;
+        e.preventDefault();
         if (!lastDragPos) {
             lastDragPos = getCoords(e);
         } else {
@@ -387,6 +390,8 @@ function enableDragContainer() {
     });
 
     document.addEventListener('touchend', function (e) {
+        e = e || window.event;
+        e.preventDefault();
         dragging = false;
     });
 }
