@@ -300,6 +300,10 @@ function bindJoystick() {
         restart();
     });
 
+    tapOrClick($(".joystick .undo"), function () {
+        undo();
+    });
+
     tapOrClick($(".zoomSettings .zoomIn"), function () {
         zoomIn();
     });
