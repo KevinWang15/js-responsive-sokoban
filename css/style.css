@@ -1,0 +1,182 @@
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+.bg {
+    width: 100vw;
+    height: 100vh;
+    background: #efefef;
+    z-index: -100000;
+}
+
+.container {
+    position: relative;
+    display: block;
+    z-index: 100;
+}
+
+.wall {
+    position: absolute;
+    background-image: url(../imgs/wall.png);
+    width: 50px;
+    height: 50px;
+    box-sizing: border-box;
+}
+
+.box {
+    -webkit-transition: left 0.2s, top 0.2s;
+    position: absolute;
+    background: #fbd500;
+    width: 50px;
+    height: 50px;
+    background-image: url(../imgs/box.png);
+}
+
+.target {
+    position: absolute;
+    background-size: 50px 50px;
+    width: 20px;
+    height: 20px;
+    margin-top: 15px;
+    margin-left: 15px;
+    border-radius: 50%;
+    background: rgba(255, 218, 119, 1);
+    box-sizing: border-box;
+}
+
+.person {
+    transition: left 0.2s, top 0.2s;
+    -webkit-transition: left 0.2s, top 0.2s;
+    background-image: url(../imgs/person.png);
+    width: 50px;
+    height: 50px;
+    position: absolute;
+}
+
+.person.up {
+    background-position: -150px 0;
+}
+
+.person.right {
+    background-position: -100px 0;
+}
+
+.person.down {
+    background-position: 0px 0;
+}
+
+.person.left {
+    background-position: -50px 0;
+}
+
+.zoomSettings {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 10000;
+}
+
+.zoomSettings .wrapper {
+    position: relative;
+    width: 60px;
+    height: 30px;
+}
+
+.zoomSettings .zoomIn, .zoomSettings .zoomOut {
+    width: 28px;
+    height: 28px;
+    margin-top: 1px;
+    margin-left: 1px;
+    border-radius: 5px;
+    position: absolute;
+    box-sizing: border-box;
+    font-size: 20px;
+    padding: 2px 0px;
+    background: rgba(170, 170, 170, 0.2);
+    text-align: center;
+    cursor: pointer;
+}
+
+.zoomSettings span {
+    -webkit-user-select: none;
+}
+
+.zoomSettings .zoomIn {
+    top: 0;
+    left: 0;
+}
+
+.zoomSettings .zoomOut {
+    top: 0;
+    left: 30px;
+}
+
+.joystick {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 10000;
+}
+
+.joystick .wrapper {
+    position: relative;
+    width: 150px;
+    height: 100px;
+}
+
+.joystick .up, .joystick .down, .joystick .left, .joystick .right, .joystick .undo, .joystick .restart {
+    width: 48px;
+    height: 48px;
+    margin-top: 1px;
+    margin-left: 1px;
+    border-radius: 5px;
+    border: 1px solid black;
+    position: absolute;
+    box-sizing: border-box;
+    font-size: 20px;
+    padding: 10px;
+    background: rgba(170, 170, 170, 0.2);
+    text-align: center;
+    cursor: pointer;
+}
+
+.joystick span {
+    -webkit-user-select: none;
+}
+
+.joystick .up {
+    top: 0;
+    left: 50px;
+}
+
+.joystick .undo {
+    top: 0;
+    padding-top: 16px;
+    font-size: 12px;
+    left: 0;
+}
+
+.joystick .restart {
+    top: 0;
+    font-size: 12px;
+    padding-top: 8px;
+    left: 100px;
+}
+
+.joystick .down {
+    top: 50px;
+    left: 50px;
+}
+
+.joystick .left {
+    top: 50px;
+    padding-top: 10px;
+    left: 0;
+}
+
+.joystick .right {
+    top: 50px;
+    padding-top: 10px;
+    left: 100px;
+}

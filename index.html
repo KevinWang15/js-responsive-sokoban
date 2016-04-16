@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sokoban</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="css/style.css"/>
+    <script src="js/levels.js"></script>
+    <script src="js/controller.js"></script>
+    <script src="libs/zepto.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            determineContainerZoom();
+            startGame();
+            bindKeys();
+            bindJoystick();
+            enableDragContainer();
+        });
+
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="person left"></div>
+</div>
+<div class="bg"></div>
+
+<div class="zoomSettings">
+    <div class="wrapper">
+        <div class="zoomIn">
+            <span>
+                +
+            </span>
+        </div>
+        <div class="zoomOut">
+            <span>
+                -
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="joystick">
+    <div class="wrapper">
+        <div class="restart">
+            <span>
+                Restart<br/>Stage
+            </span>
+        </div>
+        <div class="undo">
+            <span>
+                Undo
+            </span>
+        </div>
+        <div class="up">
+            <span>
+                ↑
+            </span>
+        </div>
+        <div class="down">
+            <span>
+                ↓
+            </span>
+        </div>
+        <div class="left">
+            <span>
+                ←
+            </span>
+        </div>
+        <div class="right">
+            <span>
+                →
+            </span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
