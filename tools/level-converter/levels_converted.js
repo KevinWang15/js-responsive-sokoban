@@ -1,7 +1,3 @@
-// Converted using /tools/level-converter/converter.js
-// Map source: https://github.com/scrooloose/sokoban
-
-
 //0:aisle
 //1:wall
 //2:target
