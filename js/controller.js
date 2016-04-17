@@ -116,9 +116,13 @@ function move(x, y) {
 
     var targetX = GameState.person.x + x;
     var targetY = GameState.person.y + y;
-    if (GameState.map[targetY][targetX] == 1) {
+
+    if (targetX < 0 || targetY < 0 || targetX >= GameState.map[0].length || targetY >= GameState.map.length)
         return;
-    }
+
+    if (GameState.map[targetY][targetX] == 1)
+        return;
+
 
     for (var i = 0; i < GameState.boxes.length; i++) {
         var box = GameState.boxes[i];
@@ -126,6 +130,8 @@ function move(x, y) {
         if (box.x == targetX && box.y == targetY) {
             var targetX2 = targetX + x;
             var targetY2 = targetY + y;
+            if (targetX2 < 0 || targetY2 < 0 || targetX2 >= GameState.map[0].length || targetY2 >= GameState.map.length)
+                return;
 
             if (GameState.map[targetY2][targetX2] == 1)
                 return;
