@@ -252,8 +252,17 @@ function bindKeys() {
     }
 }
 
+var _isMobile = null;
+function isMobile() {
+    if (_isMobile !== null) return _isMobile;
+    else {
+        _isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        return _isMobile;
+    }
+}
+
 function tapOrClick(element, callback) {
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    if (isMobile()) {
         element.tap(callback);
     } else {
         element.click(callback);
@@ -362,11 +371,20 @@ function determineContainerZoom() {
 
 function getCoords(e) {
     var touch = false;
-    if (e.touches.length > 0) {
-        touch = e.touches[0];
+    if (isMobile()) {
+        if (e.touches.length > 0) {
+            touch = e.touches[0];
+        } else {
+            touch = e.changedTouches[0];
+        }
     } else {
-        touch = e.changedTouches[0];
+        touch = e;
     }
+    if (!touch.pageX)
+        touch.pageX = touch.clientX;
+    if (!touch.pageY)
+        touch.pageY = touch.clientY;
+
     return {x: touch.pageX, y: touch.pageY};
 }
 
@@ -390,21 +408,24 @@ function centerContainer() {
 function enableDragContainer() {
     var dragThreshold = 100;
     var accumulativeDistance = {x: 0, y: 0};
-
-    document.addEventListener('touchstart', function (e) {
+    var dragging = false;
+    document.addEventListener(isMobile() ? 'touchstart' : "mousedown", function (e) {
         accumulativeDistance = {x: 0, y: 0};
         e = e || window.event;
         e.preventDefault();
         lastDragPos = getCoords(e);
+        dragging = true;
     });
 
-    document.addEventListener('touchmove', function (e) {
+    document.addEventListener(isMobile() ? 'touchmove' : "mousemove", function (e) {
         e = e || window.event;
         e.preventDefault();
 
         if (!lastDragPos) {
             lastDragPos = getCoords(e);
         }
+
+        if (!isMobile() && !dragging) return;
 
         var currentDragPos = getCoords(e);
         var offset = {x: currentDragPos.x - lastDragPos.x, y: currentDragPos.y - lastDragPos.y};
@@ -423,8 +444,9 @@ function enableDragContainer() {
 
     });
 
-    document.addEventListener('touchend', function (e) {
+    document.addEventListener(isMobile() ? 'touchend' : 'mouseup', function (e) {
         e = e || window.event;
         e.preventDefault();
+        dragging = false;
     });
 }
