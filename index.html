@@ -20,72 +20,95 @@
     </script>
 </head>
 <body>
-<div class="container">
-</div>
-<div class="bg"></div>
-
-<div class="score">
-    <div class="wrapper">
-        Score: <span id="score"></span>
+<div class="gameover">
+    <div>
+        Game Over
     </div>
-    <div class="buttons">
-        <button onclick="skipLevel()">
-            Skip Level
-        </button>
-        <button onclick="restartGame()">
-            Restart Game
-        </button>
+    <div class="score_div">
+        Your Score:
+        <span class="score_div_score"></span>
     </div>
-</div>
 
-<div class="zoomSettings">
-    <div class="wrapper">
-        <div class="zoomIn">
+    <button class="restart_btn">
+        Restart Game
+    </button>
+
+</div>
+<div class="game">
+
+    <div class="container">
+    </div>
+    <div class="bg"></div>
+
+    <div class="score">
+        <div class="wrapper buttons">
+            <span class="score-wrapper">
+                Score: <span id="score"></span>
+            </span>
+            <button id="btnEndGame">
+                End Game
+            </button>
+        </div>
+        <div class="buttons">
+            <button id="btnSkipLevel">
+                Skip Level
+            </button>
+            <button id="btnRestartGame">
+                Restart Game
+            </button>
+        </div>
+    </div>
+
+    <div class="zoomSettings">
+        <div class="wrapper">
+            <div class="zoomIn">
             <span>
                 ＋
             </span>
-        </div>
-        <div class="zoomOut">
+            </div>
+            <div class="zoomOut">
             <span>
                 －
             </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="joystick">
+        <div class="wrapper">
+            <div class="restart">
+            <span>
+                Restart Level
+            </span>
+            </div>
+            <div class="undo">
+            <span>
+                Undo
+            </span>
+            </div>
+            <div class="up">
+            <span>
+                ↑
+            </span>
+            </div>
+            <div class="down">
+            <span>
+                ↓
+            </span>
+            </div>
+            <div class="left">
+            <span>
+                ←
+            </span>
+            </div>
+            <div class="right">
+            <span>
+                →
+            </span>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="joystick">
-    <div class="wrapper">
-        <div class="restart">
-            <span>
-                Restart
-            </span>
-        </div>
-        <div class="undo">
-            <span>
-                Undo
-            </span>
-        </div>
-        <div class="up">
-            <span>
-                ↑
-            </span>
-        </div>
-        <div class="down">
-            <span>
-                ↓
-            </span>
-        </div>
-        <div class="left">
-            <span>
-                ←
-            </span>
-        </div>
-        <div class="right">
-            <span>
-                →
-            </span>
-        </div>
-    </div>
-</div>
 </body>
 </html>

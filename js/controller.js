@@ -30,9 +30,21 @@ function refreshScore() {
     DOM.score.html(game.score);
 }
 
-function restartGame() {
-    if (confirm("Are you sure ?")) {
+function restartGame(noConfirm) {
+    if (noConfirm) {
         window.location.reload();
+    } else {
+        if (confirm("Are you sure to restart this game?")) {
+            window.location.reload();
+        }
+    }
+}
+
+function endGame() {
+    if (confirm("Are you sure to end this game ?")) {
+        $(".game").css("display", "none");
+        $(".gameover").css("display", "block");
+        $(".score_div_score").html(game.score);
     }
 }
 
@@ -93,6 +105,7 @@ function initStage() {
     var levelData = decompressLevel(levelsData[game.currentStage]);
     if (!levelData) {
         alert("Congrats! You've finished all the levels");
+
         return;
     }
     console.log("Level Difficulty:", levelData.difficulty);
@@ -444,6 +457,22 @@ function bindJoystick() {
 
     tapOrClick($(".zoomSettings .zoomOut"), function () {
         zoomOut();
+    });
+
+    tapOrClick($(".gameover .restart_btn"), function () {
+        restartGame(true);
+    });
+
+    tapOrClick($("#btnRestartGame"), function () {
+        restartGame();
+    });
+
+    tapOrClick($("#btnEndGame"), function () {
+        endGame();
+    });
+
+    tapOrClick($("#btnSkipLevel"), function () {
+        skipLevel();
     });
 }
 
