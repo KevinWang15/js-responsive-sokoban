@@ -75,7 +75,7 @@ function makeLevel(fContent) {
         return;
     }
 
-    var level = {map: [], person: {}, box: []};
+    var level = {m: [], p: {}, b: []};
     for (var y = 0; y < height; y++) {
         var map_line = [];
         for (var x = 0; x < width; x++) {
@@ -94,12 +94,12 @@ function makeLevel(fContent) {
             //$: box, .: target, #: wall, *: box on target, +: person on target, @: person
             map_line.push({' ': 0, '#': 1, 'o': 0, '@': 0, '.': 2, '$': 0, '+': 2, '*': 2}[char]);
             if (char == "@" || char == "+")
-                level.person = {x: x, y: y};
+                level.p = [x, y];
             if (char == '$' || char == '*') {
-                level.box.push({x: x, y: y});
+                level.b.push([x, y]);
             }
         }
-        level.map.push(map_line);
+        level.m.push(map_line.join(""));
     }
 
     if (map_coords.top != 0 || map_coords.left != 0 ||
@@ -120,7 +120,7 @@ function makeLevel(fContent) {
     var levelHash = makeLevelHash(level);
     if (levelHashes.indexOf(levelHash) == -1) {
         levelHashes.push(levelHash);
-        levels.push(level);
+        levels.push([level.m, level.p, level.b]);
     } else {
         duplicateLevelCount++;
     }
@@ -154,20 +154,20 @@ function readDir(dirPath) {
 
 console.log("\033[32mWorking on it\n");
 
-var time_start=+new Date();
+var time_start = +new Date();
 
 readDir("data");
 
-var time_end=+new Date();
+var time_end = +new Date();
 
 console.log("\033[0m\n\n\033[33m" + levels.length + " level" + (levels.length > 1 ? "s" : "") + " created, "
     + duplicateLevelCount + " duplicate level" + (duplicateLevelCount > 1 ? "s" : "") + ", "
     + skippedLevelCount + " skipped level" + (skippedLevelCount > 1 ? "s (because they are too big)" : "")
 );
 
-console.log("\n\033[36mFinished in "+(time_end-time_start)+" ms");
+console.log("\n\033[36mFinished in " + (time_end - time_start) + " ms");
 fs.writeFileSync("levels.js",
-    "//0:aisle\n//1:wall\n//2:target\nvar levelsData =" +
+    "var levelsData =" +
     JSON.stringify(levels)
     , {encoding: "utf8"}
 );

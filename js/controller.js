@@ -27,9 +27,20 @@ function setPos(domElement, x, y) {
     domElement.style.left = x * 50 + 'px';
 }
 
+function decompressLevel(data) {
+    var level = {map: [], person: {}, box: []};
+    data[0].forEach(function (d) {
+        level.map.push(d.split(""));
+    });
+    level.person = {x: data[1][0], y: data[1][1]};
+    data[2].forEach(function (d) {
+        level.box.push({x: d[0], y: d[1]});
+    });
+    return level;
+}
 
 function initStage() {
-    var levelData = levelsData[game.currentStage];
+    var levelData = decompressLevel(levelsData[game.currentStage]);
     if (!levelData) {
         alert("Congrats! You've finished all the levels");
         game.currentStage = 0;
@@ -359,8 +370,6 @@ function determineContainerZoom() {
 
     if (!documentHeight)
         documentHeight = $(document).height();
-
-    console.log(documentHeight);
 
     if (documentWidth < 600) {
         containerZoom = 0.8 - ((600 - documentWidth) / 1200);
