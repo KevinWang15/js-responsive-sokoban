@@ -83,7 +83,7 @@ function makeLevel(fContent) {
         return;
     }
 
-    var level = {m: [], p: {}, b: []};
+    var level = {map: [], person: {}, box: []};
     for (var y = 0; y < height; y++) {
         var map_line = [];
         for (var x = 0; x < width; x++) {
@@ -102,12 +102,12 @@ function makeLevel(fContent) {
             //$: box, .: target, #: wall, *: box on target, +: person on target, @: person
             map_line.push({' ': 0, '#': 1, 'o': 0, '@': 0, '.': 2, '$': 0, '+': 2, '*': 2}[char]);
             if (char == "@" || char == "+")
-                level.p = [x, y];
+                level.person = [x, y];
             if (char == '$' || char == '*') {
-                level.b.push([x, y]);
+                level.box.push([x, y]);
             }
         }
-        level.m.push(map_line.join(""));
+        level.map.push(map_line.join(""));
     }
 
     if (map_coords.top != 0 || map_coords.left != 0 ||
@@ -128,7 +128,7 @@ function makeLevel(fContent) {
     var levelHash = makeLevelHash(level);
     if (levelHashes.indexOf(levelHash) == -1) {
         levelHashes.push(levelHash);
-        levels.push([level.m, level.p, level.b]);
+        levels.push([level.map, level.person, level.box]);
     } else {
         duplicateLevelCount++;
     }
