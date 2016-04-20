@@ -12,7 +12,7 @@ for (var i = 0; i < levelsData.length; i++) {
 //Randomly pick from levelsData
 
 var newLevelsData = [];
-for (i = parseInt(Math.random() * 10); i < levelsData.length; i += (parseInt(Math.random() * 10 + i / 10) + 1)) {
+for (i = parseInt(Math.random() * 10); i < levelsData.length; i += (parseInt(Math.random() * 20 + i / 20) + 1)) {
     if (i >= 0 && i <= levelsData.length)
         newLevelsData.push(levelsData[i]);
 }
@@ -77,6 +77,7 @@ function setPos(domElement, x, y) {
 
 function decompressLevel(data) {
     var level = {map: [], person: {}, box: []};
+    if (!data) return null;
     data[0].forEach(function (d) {
         level.map.push(d.split(""));
     });
@@ -90,12 +91,12 @@ function decompressLevel(data) {
 
 function initStage() {
     var levelData = decompressLevel(levelsData[game.currentStage]);
-    console.log("Level Difficulty:", levelData.difficulty);
     if (!levelData) {
         alert("Congrats! You've finished all the levels");
-        game.currentStage = 0;
-        levelData = levelsData[game.currentStage];
+        return;
     }
+    console.log("Level Difficulty:", levelData.difficulty);
+
     moveHistory = [];
 
     clearContainer();
@@ -254,29 +255,42 @@ function move(x, y) {
 
 var waitingForNewStage = false;
 
-function checkSuccess() {
+function checkSuccess(forceSuccessful) {
     var successful = true;
 
-    for (var i = 0; i < GameState.boxes.length; i++) {
-        var box = GameState.boxes[i];
-        if (GameState.map[box.y][box.x] != 2) {
-            successful = false;
-            break;
+    if (!forceSuccessful) {
+        for (var i = 0; i < GameState.boxes.length; i++) {
+            var box = GameState.boxes[i];
+            if (GameState.map[box.y][box.x] != 2) {
+                successful = false;
+                break;
+            }
         }
     }
 
     if (successful && !waitingForNewStage) {
         waitingForNewStage = true;
-        setTimeout(function () {
+
+        function nextStage() {
             waitingForNewStage = false;
             game.currentStage++;
 
-            game.score += GameState.boxes.length * 7;
-            game.score += game.currentStage * 15;
+            if (!forceSuccessful) {
+                game.score += GameState.boxes.length * 7;
+                game.score += game.currentStage * 15;
+                refreshScore();
+            }
 
-            refreshScore();
             initStage();
-        }, 150);
+        }
+
+        if (forceSuccessful) {
+            nextStage();
+        } else {
+            setTimeout(function () {
+                nextStage();
+            }, 150);
+        }
     }
 }
 
@@ -286,8 +300,7 @@ function bindKeys() {
         switch (e.code || e.key) {
 
             case "KeyN":
-                if (game.currentStage < levelsData.length - 1)
-                    game.currentStage++;
+                checkSuccess(true);
                 console.log(game.currentStage);
                 initStage();
                 break;
