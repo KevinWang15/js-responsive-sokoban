@@ -64,6 +64,7 @@ function initStage() {
         DOM.container.appendChild(boxElement);
         GameState.boxes.push({x: box.x, y: box.y, element: boxElement});
         setPos(boxElement, box.x, box.y);
+        setBoxOpacity({element: boxElement, x: box.x, y: box.y});
     }
 
     //add walls and targets.
