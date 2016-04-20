@@ -36,6 +36,14 @@ var dotCount = 0;
 var duplicateLevelCount = 0;
 var skippedLevelCount = 0;
 
+function fileExists(filePath) {
+    try {
+        return fs.statSync(filePath).isFile();
+    }
+    catch (err) {
+        return false;
+    }
+}
 function makeLevelHash(level) {
     return hash(level);
 }
@@ -163,10 +171,18 @@ var time_end = +new Date();
 console.log("\033[0m\n\n\033[33m" + levels.length + " level" + (levels.length > 1 ? "s" : "") + " created, "
     + duplicateLevelCount + " duplicate level" + (duplicateLevelCount > 1 ? "s" : "") + ", "
     + skippedLevelCount + " skipped level" + (skippedLevelCount > 1 ? "s (because they are too big)" : "")
+    + "\nRefresh your browser to play!"
 );
 
 console.log("\n\033[36mFinished in " + (time_end - time_start) + " ms");
-fs.writeFileSync("levels.js",
+
+if (fileExists('../../js/levels.js')) {
+    var newPath = (+new Date()) + '.old.js';
+    console.log("\n\033[35mOld levels.js moved to " + newPath);
+    fs.renameSync('../../js/levels.js', '../../js/' + 'levels.' + newPath);
+}
+
+fs.writeFileSync("../../js/levels.js",
     "var levelsData =" +
     JSON.stringify(levels)
     , {encoding: "utf8"}
