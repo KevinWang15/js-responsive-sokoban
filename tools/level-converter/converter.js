@@ -24,7 +24,8 @@
 
  */
 
-var max_map_size = 18;
+//var max_map_size = 8;
+var max_map_size = 13;
 
 var hash = require('object-hash');
 var fs = require("fs");
@@ -55,6 +56,15 @@ function random(low, high) {
 function makeLevel(fContent) {
     if (!fContent) return;
 
+    var difficulty = -1;
+    var difficultyMatch = /^<difficulty:\s*(\d+\.?\d*)>/m.exec(fContent);
+
+
+    if (difficultyMatch != null) {
+        difficulty = difficultyMatch[1];
+        fContent = fContent.substr(fContent.indexOf("\n") + 1);
+    }
+
     process.stdout.write("\033[3" + random(0, 9) + "m\033[4" + random(0, 9) + "m" + ["★", "○", "√", "÷", "×", "©", "￥"][random(0, 5)]);
     dotCount++;
     if (dotCount % 32 == 0)
@@ -77,11 +87,6 @@ function makeLevel(fContent) {
     lines.forEach(function (d) {
         if (d.length > width) width = d.length;
     });
-
-    if (width > max_map_size || height > max_map_size) {
-        skippedLevelCount++;
-        return;
-    }
 
     var level = {map: [], person: {}, box: []};
     for (var y = 0; y < height; y++) {
@@ -107,15 +112,19 @@ function makeLevel(fContent) {
                 level.box.push([x, y]);
             }
         }
-        level.map.push(map_line.join(""));
+        level.map.push(map_line);
     }
 
+
+    var map_real_height = map_coords.bottom - map_coords.top + 1;
+    var map_real_width = map_coords.right - map_coords.left + 1;
+
     if (map_coords.top != 0 || map_coords.left != 0 ||
-        map_coords.bottom != height - 1 || map_coords.right != width - 1) {
+        map_real_height != height || map_real_width != width) {
         //resize map
         var newMap = [];
         for (y = map_coords.top; y <= map_coords.bottom; y++)
-            newMap.push(level.map[y].splice(map_coords.left, map_coords.right - map_coords.left + 1));
+            newMap.push(level.map[y].splice(map_coords.left, map_real_width));
         level.map = newMap;
         level.person.x -= map_coords.left;
         level.person.y -= map_coords.top;
@@ -124,11 +133,31 @@ function makeLevel(fContent) {
             d.y -= map_coords.top;
         });
     }
+    var levelMapCompressed = [];
+
+    level.map.forEach(function (data) {
+        levelMapCompressed.push(data.join(""));
+    });
+    level.map = levelMapCompressed;
+
+    if (width > max_map_size || height > max_map_size) {
+        skippedLevelCount++;
+        return;
+    } else {
+        if (difficulty == -1) {
+            //Estimate difficulty based on boxes
+            difficulty = (map_real_height - 5) * (map_real_width - 5);
+            if (difficulty < 0) difficulty = 1;
+            difficulty += Math.pow(1.2, level.box.length);
+            difficulty /= 5;
+            difficulty += 10;
+        }
+    }
 
     var levelHash = makeLevelHash(level);
     if (levelHashes.indexOf(levelHash) == -1) {
         levelHashes.push(levelHash);
-        levels.push([level.map, level.person, level.box]);
+        levels.push([level.map, level.person, level.box, difficulty]);
     } else {
         duplicateLevelCount++;
     }
@@ -136,7 +165,7 @@ function makeLevel(fContent) {
 }
 
 function splitLevels(fContent) {
-    fContent = fContent.replace(/;.+?$/mg, "");
+    fContent = fContent.replace(/;.*?$/mg, "");
     return fContent.split(/\n\n+/m);
 }
 
@@ -181,6 +210,16 @@ if (fileExists('../../js/levels.js')) {
     console.log("\n\033[35mOld levels.js moved to " + newPath);
     fs.renameSync('../../js/levels.js', '../../js/' + 'levels.' + newPath);
 }
+
+//levels = levels.sort(function compare(a, b) {
+//        if (a[3] < b[3])
+//            return -1;
+//        else if (a[3] > b[3])
+//            return 1;
+//        else
+//            return 0;
+//    }
+//);
 
 fs.writeFileSync("../../js/levels.js",
     "var levelsData =" +

@@ -19,6 +19,8 @@ Demo: [http://139.196.50.217:7011/](http://139.196.50.217:7011/)
 | ↓ | Move Down |
 | ← | Move Left |
 | → | Move Right |
+| N | Next Stage |
+| P | Previous Stage |
 | Esc | Restart stage |
 | Backspace| Undo |
 

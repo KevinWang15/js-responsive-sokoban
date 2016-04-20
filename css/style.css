@@ -82,6 +82,29 @@ body {
     background-position: -50px 0;
 }
 
+.score {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    z-index: 10000;
+}
+
+.score .wrapper {
+    position: relative;
+    text-align: center;
+}
+
+.score .buttons button {
+    /*display: block;*/
+    margin: 6px auto;
+    font-size: 11px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background: rgba(220, 220, 220, 0.4);
+    text-align: center;
+    cursor: pointer;
+}
+
 .zoomSettings {
     position: absolute;
     right: 10px;

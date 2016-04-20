@@ -1,18 +1,66 @@
-//Shuffle levels
+//shuffle levelsData
 
-if (!Array.prototype.shuffle) {
-    Array.prototype.shuffle = function () {
-        for (var j, x, i = this.length; i; j = parseInt(Math.random() * i), x = this[--i], this[i] = this[j], this[j] = x);
-        return this;
-    };
+for (var i = 0; i < levelsData.length; i++) {
+    var tmp = levelsData[i];
+    var j = i + parseInt(Math.random() * 20) - 10;
+    if (j < 0) j = 0;
+    if (j >= levelsData.length)j = levelsData.length;
+    levelsData[i] = levelsData[j];
+    levelsData[j] = tmp;
 }
 
-levelsData.shuffle();
+//Randomly pick from levelsData
+
+var newLevelsData = [];
+for (i = parseInt(Math.random() * 10); i < levelsData.length; i += (parseInt(Math.random() * 10 + i / 10) + 1)) {
+    if (i >= 0 && i <= levelsData.length)
+        newLevelsData.push(levelsData[i]);
+}
+
+levelsData = newLevelsData;
 
 
 var game = {
-    currentStage: 0
+    currentStage: 0,
+    score: 0,
+    remainingSkips: 5
 };
+
+function refreshScore() {
+    DOM.score.html(game.score);
+}
+
+function restartGame() {
+    if (confirm("Are you sure ?")) {
+        window.location.reload();
+    }
+}
+
+function skipLevel() {
+    if (game.remainingSkips > 0) {
+        var score = 0;
+        for (var i = 0; i < GameState.boxes.length; i++) {
+            var box = GameState.boxes[i];
+            if (GameState.map[box.y][box.x] == 2) {
+                score += 7;
+                break;
+            }
+        }
+
+        if (confirm("You have " + game.remainingSkips + " chance" + (game.remainingSkips > 1 ? "s" : "") + " remaining to skip, \n you will get " + score + " point" + (score > 1 ? "s" : "") + " for this level.\n\nSkip this level ?")) {
+            game.score += score;
+            refreshScore();
+            game.currentStage++;
+            initStage();
+            game.remainingSkips--;
+        }
+
+    } else {
+        alert("Oops, you have no chance left to skip stages.\n You may want to restart the game.");
+    }
+
+
+}
 
 function cloneMap(map) {
     var newMap = [];
@@ -36,11 +84,13 @@ function decompressLevel(data) {
     data[2].forEach(function (d) {
         level.box.push({x: d[0], y: d[1]});
     });
+    level.difficulty = data[3];
     return level;
 }
 
 function initStage() {
     var levelData = decompressLevel(levelsData[game.currentStage]);
+    console.log("Level Difficulty:", levelData.difficulty);
     if (!levelData) {
         alert("Congrats! You've finished all the levels");
         game.currentStage = 0;
@@ -49,6 +99,8 @@ function initStage() {
     moveHistory = [];
 
     clearContainer();
+
+    refreshScore();
 
     //init GameState
     GameState.person = {x: levelData.person.x, y: levelData.person.y};
@@ -94,7 +146,8 @@ function initStage() {
 
 var DOM = {
     container: null,
-    person: null
+    person: null,
+    scroll: null
 };
 
 var GameState = {
@@ -105,6 +158,7 @@ var GameState = {
 
 function getDomElements() {
     DOM.container = $(".container")[0];
+    DOM.score = $("#score");
 }
 
 function clearContainer() {
@@ -216,6 +270,11 @@ function checkSuccess() {
         setTimeout(function () {
             waitingForNewStage = false;
             game.currentStage++;
+
+            game.score += GameState.boxes.length * 7;
+            game.score += game.currentStage * 15;
+
+            refreshScore();
             initStage();
         }, 150);
     }
@@ -225,6 +284,21 @@ function bindKeys() {
     document.onkeydown = function (e) {
         e = e || window.event;
         switch (e.code || e.key) {
+
+            case "KeyN":
+                if (game.currentStage < levelsData.length - 1)
+                    game.currentStage++;
+                console.log(game.currentStage);
+                initStage();
+                break;
+
+            case "KeyP":
+                if (game.currentStage > 0)
+                    game.currentStage--;
+                console.log(game.currentStage);
+                initStage();
+                break;
+
             case "ArrowUp":
             case "Up":
                 move(0, -1);
@@ -415,7 +489,7 @@ function centerContainer() {
 }
 
 function enableDragContainer() {
-    var dragThreshold = 100;
+    var dragThreshold = 70;
     var accumulativeDistance = {x: 0, y: 0};
     var dragging = false;
     document.addEventListener(isMobile() ? 'touchstart' : "mousedown", function (e) {
