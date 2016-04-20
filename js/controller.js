@@ -363,9 +363,9 @@ function determineContainerZoom() {
     console.log(documentHeight);
 
     if (documentWidth < 600) {
-        containerZoom = 1 - ((600 - documentWidth) / 1000);
+        containerZoom = 0.8 - ((600 - documentWidth) / 1200);
     } else {
-        containerZoom = 1;
+        containerZoom = 0.8;
     }
 }
 
