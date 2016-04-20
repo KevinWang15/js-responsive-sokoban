@@ -75,10 +75,10 @@ function skipLevel() {
         var score = 0;
         for (var i = 0; i < GameState.boxes.length; i++) {
             var box = GameState.boxes[i];
-            if (GameState.map[box.y][box.x] == 2) {
+
+            if (GameState.map[box.y][box.x] == 2)
                 score += 7;
-                break;
-            }
+
         }
 
         if (confirm("You have " + game.remainingSkips + " chance" + (game.remainingSkips > 1 ? "s" : "") + " remaining to skip, \n you will get " + score + " point" + (score > 1 ? "s" : "") + " for this level.\n\nSkip this level ?")) {
