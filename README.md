@@ -3,7 +3,7 @@ Demo: [http://139.196.50.217:7011/](http://139.196.50.217:7011/)
 
 ## Features
 
-1. Pure JS, minimal dependency (zepto only, whole game 75kb gzipped, with 800+ stages, only 35kb without stages)
+1. Pure JS, minimal dependency (zepto only, whole game 65kb gzipped, with 1000+ stages, only 35kb without stages)
 1. Good gaming experience (Animations / Cartoon character with different orientation)
 1. Responsive display. Auto centering / allow drag on mobile.
 1. Virtual keyboard on mobile
@@ -40,3 +40,23 @@ You may edit levels by modifying txt files at ```tools/level-converter/data```, 
 |```@``` |Person|
 |```+```|Person and Target|
 |```*``` |Box and Target|
+
+### Marking stage difficulty
+
+To make this game playable, difficulty of stages will increase progressively.
+You can mark the difficulty of a certain level by adding the following annotation at the beginning of the stage:
+
+    <difficulty: 1.5>
+
+You will get:
+    
+    ; 21: 6 lines (0.046 seconds)
+    <difficulty: 0.046>
+    ########
+    # .#@  #
+    #   $  #
+    #  *   #
+    ########
+    
+See ```tools/level-converter/data/larc.unt.edu.txt``` for examples.
+If no annotation is found, an algorithm will be applied to guess the stage's difficulty.
