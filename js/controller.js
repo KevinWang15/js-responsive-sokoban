@@ -1,51 +1,73 @@
-//shuffle levelsData
-
-for (var i = 0; i < levelsData.length; i++) {
-    var tmp = levelsData[i];
-    var j = i + parseInt(Math.random() * 20) - 10;
-    if (j < 0) j = 0;
-    if (j >= levelsData.length)j = levelsData.length;
-    levelsData[i] = levelsData[j];
-    levelsData[j] = tmp;
-}
-
-//Randomly pick from levelsData
-
-var newLevelsData = [];
-for (i = parseInt(Math.random() * 10); i < levelsData.length; i += (parseInt(Math.random() * 20 + i / 20) + 1)) {
-    if (i >= 0 && i <= levelsData.length)
-        newLevelsData.push(levelsData[i]);
-}
-
-levelsData = newLevelsData;
-
-
 var game = {
     currentStage: 0,
     score: 0,
     remainingSkips: 5
 };
 
+if (!localStorage['levelsData']) {
+
+//shuffle levelsData
+
+    for (var i = 0; i < levelsData.length; i++) {
+        var tmp = levelsData[i];
+        var j = i + parseInt(Math.random() * 20) - 10;
+        if (j < 0) j = 0;
+        if (j >= levelsData.length)j = levelsData.length;
+        levelsData[i] = levelsData[j];
+        levelsData[j] = tmp;
+    }
+
+//Randomly pick from levelsData
+
+    var newLevelsData = [];
+    for (i = parseInt(Math.random() * 10); i < levelsData.length; i += (parseInt(Math.random() * 20 + i / 20) + 1)) {
+        if (i >= 0 && i <= levelsData.length)
+            newLevelsData.push(levelsData[i]);
+    }
+
+    levelsData = newLevelsData;
+
+    localStorage['levelsData'] = JSON.stringify(levelsData);
+} else {
+    levelsData = JSON.parse(localStorage['levelsData']);
+    game = JSON.parse(localStorage['game']);
+
+}
+
+
 function refreshScore() {
     DOM.score.html(game.score);
 }
 
 function restartGame(noConfirm) {
-    if (noConfirm) {
+    function restart() {
+        delete localStorage['game'];
+        delete localStorage['levelsData'];
         window.location.reload();
+    }
+
+    if (noConfirm) {
+        restart();
     } else {
         if (confirm("Are you sure to restart this game?")) {
-            window.location.reload();
+            restart();
         }
     }
 }
 
-function endGame() {
-    if (confirm("Are you sure to end this game ?")) {
+function endGame(noConfirm) {
+    function end() {
+        delete localStorage['game'];
+        delete localStorage['levelsData'];
         $(".game").css("display", "none");
         $(".gameover").css("display", "block");
         $(".score_div_score").html(game.score);
     }
+
+    if (noConfirm) end();
+    else if (confirm("Are you sure to end this game ?"))
+        end();
+
 }
 
 function skipLevel() {
@@ -61,10 +83,10 @@ function skipLevel() {
 
         if (confirm("You have " + game.remainingSkips + " chance" + (game.remainingSkips > 1 ? "s" : "") + " remaining to skip, \n you will get " + score + " point" + (score > 1 ? "s" : "") + " for this level.\n\nSkip this level ?")) {
             game.score += score;
-            refreshScore();
             game.currentStage++;
-            initStage();
             game.remainingSkips--;
+            refreshScore();
+            initStage();
         }
 
     } else {
@@ -102,10 +124,11 @@ function decompressLevel(data) {
 }
 
 function initStage() {
+    localStorage['game'] = JSON.stringify(game);
     var levelData = decompressLevel(levelsData[game.currentStage]);
     if (!levelData) {
         alert("Congrats! You've finished all the levels");
-
+        endGame(true);
         return;
     }
     console.log("Level Difficulty:", levelData.difficulty);
