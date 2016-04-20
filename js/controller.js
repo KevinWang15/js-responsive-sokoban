@@ -57,6 +57,11 @@ function restartGame(noConfirm) {
 
 function endGame(noConfirm) {
     function end() {
+
+        if (!noConfirm) {
+            game.score += countScore();
+        }
+
         delete localStorage['game'];
         delete localStorage['levelsData'];
         $(".game").css("display", "none");
@@ -70,16 +75,21 @@ function endGame(noConfirm) {
 
 }
 
+function countScore() {
+    var score = 0;
+    for (var i = 0; i < GameState.boxes.length; i++) {
+        var box = GameState.boxes[i];
+
+        if (GameState.map[box.y][box.x] == 2)
+            score += 7;
+
+    }
+    return score;
+}
+
 function skipLevel() {
     if (game.remainingSkips > 0) {
-        var score = 0;
-        for (var i = 0; i < GameState.boxes.length; i++) {
-            var box = GameState.boxes[i];
-
-            if (GameState.map[box.y][box.x] == 2)
-                score += 7;
-
-        }
+        var score = countScore();
 
         if (confirm("You have " + game.remainingSkips + " chance" + (game.remainingSkips > 1 ? "s" : "") + " remaining to skip, \n you will get " + score + " point" + (score > 1 ? "s" : "") + " for this level.\n\nSkip this level ?")) {
             game.score += score;
