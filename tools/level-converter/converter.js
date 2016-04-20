@@ -211,15 +211,15 @@ if (fileExists('../../js/levels.js')) {
     fs.renameSync('../../js/levels.js', '../../js/' + 'levels.' + newPath);
 }
 
-//levels = levels.sort(function compare(a, b) {
-//        if (a[3] < b[3])
-//            return -1;
-//        else if (a[3] > b[3])
-//            return 1;
-//        else
-//            return 0;
-//    }
-//);
+levels = levels.sort(function compare(a, b) {
+        if (a[3] < b[3])
+            return -1;
+        else if (a[3] > b[3])
+            return 1;
+        else
+            return 0;
+    }
+);
 
 fs.writeFileSync("../../js/levels.js",
     "var levelsData =" +
