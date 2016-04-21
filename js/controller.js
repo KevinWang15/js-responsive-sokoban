@@ -4,36 +4,37 @@ var game = {
     remainingSkips: 5
 };
 
-if (!localStorage['levelsData']) {
+function generateLevelsData() {
+    if (!localStorage['levelsData']) {
 
 //shuffle levelsData
 
-    for (var i = 0; i < levelsData.length; i++) {
-        var tmp = levelsData[i];
-        var j = i + parseInt(Math.random() * 20) - 10;
-        if (j < 0) j = 0;
-        if (j >= levelsData.length)j = levelsData.length;
-        levelsData[i] = levelsData[j];
-        levelsData[j] = tmp;
-    }
+        for (var i = 0; i < levelsData.length; i++) {
+            var tmp = levelsData[i];
+            var j = i + parseInt(Math.random() * 20) - 10;
+            if (j < 0) j = 0;
+            if (j >= levelsData.length)j = levelsData.length;
+            levelsData[i] = levelsData[j];
+            levelsData[j] = tmp;
+        }
 
 //Randomly pick from levelsData
 
-    var newLevelsData = [];
-    for (i = parseInt(Math.random() * 10); i < levelsData.length; i += (parseInt(Math.random() * 20 + i / 20) + 1)) {
-        if (i >= 0 && i <= levelsData.length)
-            newLevelsData.push(levelsData[i]);
+        var newLevelsData = [];
+        for (i = parseInt(Math.random() * 10); i < levelsData.length; i += (parseInt(Math.random() * 20 + i / 20) + 1)) {
+            if (i >= 0 && i <= levelsData.length)
+                newLevelsData.push(levelsData[i]);
+        }
+
+        levelsData = newLevelsData;
+
+        localStorage['levelsData'] = JSON.stringify(levelsData);
+    } else {
+        levelsData = JSON.parse(localStorage['levelsData']);
+        game = JSON.parse(localStorage['game']);
+
     }
-
-    levelsData = newLevelsData;
-
-    localStorage['levelsData'] = JSON.stringify(levelsData);
-} else {
-    levelsData = JSON.parse(localStorage['levelsData']);
-    game = JSON.parse(localStorage['game']);
-
 }
-
 
 function refreshScore() {
     DOM.score.html(game.score);
@@ -43,6 +44,7 @@ function restartGame(noConfirm) {
     function restart() {
         delete localStorage['game'];
         delete localStorage['levelsData'];
+        localStorage['restart'] = 1;
         window.location.reload();
     }
 
@@ -61,6 +63,11 @@ function endGame(noConfirm) {
         if (!noConfirm) {
             game.score += countScore();
         }
+
+
+        var highestScore = localStorage['highestScore'];
+        if (!highestScore) highestScore = 0;
+        if (game.score > highestScore) localStorage['highestScore'] = game.score;
 
         delete localStorage['game'];
         delete localStorage['levelsData'];
@@ -223,6 +230,7 @@ function clearContainer() {
 }
 
 function startGame() {
+    generateLevelsData();
     getDomElements();
     initStage();
 }
@@ -608,3 +616,30 @@ function enableDragContainer() {
         dragging = false;
     });
 }
+
+
+$(document).ready(function () {
+    determineContainerZoom();
+    function start() {
+        $(".game").css("display", "block");
+        $(".gameintro").css("display", "none");
+        startGame();
+        bindKeys();
+        bindJoystick();
+        enableDragContainer();
+    }
+
+    if (+localStorage["restart"] == 1 || !!localStorage["game"]) {
+        start();
+        delete localStorage["restart"];
+    } else {
+        var highestScore = localStorage['highestScore'];
+        if (!highestScore) highestScore = 0;
+        $(".highest_score").html("Highest Score: " + highestScore);
+        $(".gameintro").css("display", "block");
+        tapOrClick($(".start_game_btn"), function () {
+            start();
+        });
+    }
+});
+

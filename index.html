@@ -4,22 +4,24 @@
     <title>Sokoban</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="stylesheet" href="css/style.css"/>
+    <script src="libs/zepto.js"></script>
     <script src="js/levels.js"></script>
     <script src="js/controller.js"></script>
-    <script src="libs/zepto.js"></script>
-    <script>
-
-        $(document).ready(function () {
-            determineContainerZoom();
-            startGame();
-            bindKeys();
-            bindJoystick();
-            enableDragContainer();
-        });
-
-    </script>
 </head>
 <body>
+<div class="gameintro">
+    <div>
+        Sokoban
+    </div>
+
+    <button class="start_game_btn">
+        Start Game
+    </button>
+
+    <p class="highest_score">
+        Highest Score:
+    </p>
+</div>
 <div class="gameover">
     <div>
         Game Over
@@ -32,7 +34,6 @@
     <button class="restart_btn">
         Restart Game
     </button>
-
 </div>
 <div class="game">
 

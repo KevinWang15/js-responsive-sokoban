@@ -12,7 +12,11 @@ body {
     bottom: 0;
 }
 
-.gameover {
+.game {
+    display: none;
+}
+
+.gameintro, .gameover {
     display: none;
     font-size: 36px;
     text-align: center;
@@ -25,7 +29,7 @@ body {
     margin-top: 10px;
 }
 
-.gameover .restart_btn {
+.gameover .restart_btn, .gameintro .start_game_btn {
     padding: 6px 10px;
     font-size: 20px;
     margin-top: 20px;
@@ -34,6 +38,19 @@ body {
     background: rgba(220, 220, 220, 0.4);
     border: none;
     cursor: pointer;
+}
+
+.gameintro .start_game_btn {
+    font-size: 26px;
+    padding: 12px 26px;
+}
+
+.gameintro .highest_score {
+    font-size: 12px;
+    position: absolute;
+    bottom:20px;
+    width: 100%;
+    color: #999;
 }
 
 .bg {
